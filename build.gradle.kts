@@ -1,34 +1,7 @@
-/*
-  Usage:
-
-  gradlew build
-  - to build a fat jar in build/libs
-
-  gradlew run
-  - to run the application
-
-  gradlew distZip
-  - to generate a full distribution zip
-*/
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.61"
-
-    // Apply the application plugin to add support for building a CLI application.
-    application
-
-    id("com.github.johnrengelman.shadow") version "5.0.0"
-
-    // https://github.com/melix/jmh-gradle-plugin
-    id("me.champeau.gradle.jmh") version "0.5.0"
-}
-
-application {
-    mainClassName = "nl.knaw.huc.di.rd.tag.tagml.lsp.MainKt"
-    applicationName = "tagml-language-server"
-    group = "nl.knaw.huc.di.rd.tag"
-    version = "1.0-SNAPSHOT"
+    kotlin("jvm") version "1.4.0"
 }
 
 repositories {
@@ -90,33 +63,5 @@ dependencies {
 tasks {
     withType<KotlinCompile> {
         kotlinOptions.jvmTarget = "1.8"
-    }
-
-    shadowJar {
-        // defaults to project.name
-        //archiveBaseName.set("${project.name}-fat")
-
-        // defaults to all, so removing this overrides the normal, non-fat jar
-        archiveClassifier.set("")
-    }
-
-    jar {
-        manifest {
-            attributes(
-                    mapOf("Implementation-Title" to project.name,
-                            "Implementation-Version" to project.version,
-                            "Main-Class" to application.mainClassName)
-            )
-        }
-    }
-}
-
-tasks.register("listrepos") {
-    doLast {
-        println("Repositories:")
-        project.repositories.map { it as MavenArtifactRepository }
-                .forEach {
-                    println("Name: ${it.name}; url: ${it.url}")
-                }
     }
 }
